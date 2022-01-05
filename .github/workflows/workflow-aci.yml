@@ -1,0 +1,47 @@
+name: Deploy Container Instance
+concurrency: aci
+
+on: [workflow_dispatch]
+
+permissions:
+      id-token: write
+      contents: read
+
+env:
+  AZURE_RESOURCEGROUP_NAME: rg-container
+  BICEP_FILE: ./deploy/aci.bicep
+
+jobs:
+  lint: 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run Bicep linter
+      run: az bicep build --file ${{ env.BICEP_FILE }}
+  
+  deploy:
+    runs-on: ubuntu-latest
+    needs: lint
+    outputs:
+      containerIPv4Address: ${{ steps.deploy.outputs.containerIPv4Address }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: azure/login@v1
+      name: Sign in to Azure
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - uses: azure/arm-deploy@v1
+      id: deploy
+      name: Deploy Container Instance
+      with:
+        failOnStdErr: false
+        deploymentName: ${{ github.run_number }}
+        resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
+        template: ${{ env.BICEP_FILE }}
+        parameters: >
+         registryURL=${{ secrets.ACR_URL }}
+         userName=${{ secrets.ACR_USERNAME }}
+         password=${{ secrets.ACR_PASSWORD }}
+         gitToken=${{ secrets.GIT_PAT }}

@@ -1,0 +1,21 @@
+name: Build a Docker Image and Push to ACR
+
+on: [workflow_dispatch]
+
+env:
+  IMAGE_NAME: runner
+  IMAGE_TAG: v1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_URL }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+      - run: |
+          docker build . -t ${{ secrets.ACR_URL }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} -f dockeragent/Dockerfile
+          docker push ${{ secrets.ACR_URL }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
