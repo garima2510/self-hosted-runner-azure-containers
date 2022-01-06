@@ -14,3 +14,5 @@ This repository contains bicep code to create azure container registry (ACR), bu
 #### P.S. A lot of params are hard-coded in the bicep file. Make sure to change the values or pass the values at run time.
 
 #### More technical details on this repository can be found in here [https://mysharepointlearnings.wordpress.com/2022/01/06/self-hosted-runner-in-azure-container-instances/](https://mysharepointlearnings.wordpress.com/2022/01/06/self-hosted-runner-in-azure-container-instances/)
+
+###### This repo is not maintained and updated. 
