@@ -9,5 +9,6 @@ This repository contains bicep code to create azure container registry (ACR), bu
    - Pass `RUNNER_REPOSITORY_URL` as the repo URL where github runner will be used. You can update the code to use org or enterprise level runner too
    - Create PAT and store it as `GITHUB_TOKEN` in secrets. This is used to connect to repo and deploy agent on it. The permission required for the token is `repo` and `admin:repo_hook`
    - After that run the workflow to deploy ACI and it will be set
+5. Your self-hosted github runner is ready to use and it runs in ACI. More details on how to use self-hosted runner [here](https://docs.github.com/en/actions/hosting-your-own-runners/using-self-hosted-runners-in-a-workflow)
 
 #### P.S. A lot of params are hard-coded in the bicep file. Make sure to change the values or pass the values at run time.
